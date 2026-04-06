@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">🎓</span>
+                <span class="logo-text">StudentMS</span>
+            </div>
+            <nav>
+                <a href="/" class="nav-link active">Dashboard</a>
+                <a href="/students/add" class="btn-primary">+ Add Student</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- STATS BAR -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <span class="stat-number" th:text="${totalCount}">0</span>
+                <span class="stat-label">Total Students</span>
+            </div>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="search-section">
+            <form action="/students/search" method="get" class="search-form">
+                <input type="text" name="keyword" placeholder="Search by student name..."
+                       class="search-input" th:value="${keyword}" />
+                <button type="submit" class="btn-search">Search</button>
+                <a href="/" class="btn-clear">Clear</a>
+            </form>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-container">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Phone</th>
+                        <th>Age</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student, stat : ${students}">
+                        <td th:text="${stat.count}"></td>
+                        <td>
+                            <span class="student-name"
+                                  th:text="${student.firstName + ' ' + student.lastName}">
+                            </span>
+                        </td>
+                        <td th:text="${student.email}"></td>
+                        <td>
+                            <span class="dept-badge" th:text="${student.department}"></span>
+                        </td>
+                        <td th:text="${student.phone}"></td>
+                        <td th:text="${student.age}"></td>
+                        <td class="actions">
+                            <a th:href="@{/students/edit/{id}(id=${student.id})}"
+                               class="btn-edit">Edit</a>
+                            <a th:href="@{/students/delete/{id}(id=${student.id})}"
+                               class="btn-delete"
+                               onclick="return confirm('Delete this student?')">Delete</a>
+                        </td>
+                    </tr>
+
+                    <!-- EMPTY STATE -->
+                    <tr th:if="${#lists.isEmpty(students)}">
+                        <td colspan="7" class="empty-state">
+                            No students found. <a href="/students/add">Add one now →</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>Student Management System — Built by Madhu A L | Spring Boot + Hibernate + MySQL</p>
+    </footer>
+
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
